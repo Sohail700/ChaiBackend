@@ -1,13 +1,18 @@
 import express from "express";
 
 const port = process.env.PORT || 3000;
-const app = express();
 
+const app = express();
 // app.get("/", (req, res) => {
 //   res.send("Hello, World!");
 // });
 
 // get a list of 5 jokes
+
+app.get("/api/sohail", (req, res) => {
+  const message = "asalamu Alaikum";
+  res.send(message);
+});
 
 app.get("/api/jokes", (req, res) => {
   const jokes = [
