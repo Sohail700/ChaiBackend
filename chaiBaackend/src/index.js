@@ -1,6 +1,8 @@
 //main approach
 import dotenv from "dotenv";
 import connectDB from "./db/index.js";
+import { app } from "./app.js";
+
 dotenv.config({
   path: "./env",
 });
@@ -18,7 +20,6 @@ connectDB()
   .catch((err) => {
     console.log("MONGO DB CONNECTION FAILED !", err);
   });
-
 
 //when we use middleware we use app.use()
 // first approach
