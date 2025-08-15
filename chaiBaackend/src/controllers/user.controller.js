@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/couldinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+
 const registerUser = asyncHandler(async (req, res) => {
   //first time (i.e. sign up) we have form through which we get data of user frontend.
   //validation - not empty.
@@ -15,41 +16,39 @@ const registerUser = asyncHandler(async (req, res) => {
   //check for user creation.
   // return res.
   //after that user can login since we have users credential.
+  console.log("Files received by Multer:", req.files);
 
-  const { fullname, email, username, password } = req.body;
-
-  console.log("email: ", email, fullname, password, username);
+  const { fullName, email, username, password } = req.body; // console.log("email: ", email, fullname, password, username);
 
   if (
-    [fullname, email, password, username].some((field) => field?.trim() === "")
+    [fullName, email, password, username].some((field) => field?.trim() === "")
   ) {
     throw new ApiError(400, "all fields are required");
   }
 
-  const existedUser = User.findOne({
+  const existedUser = await User.findOne({
     $or: [{ username }, { email }],
   });
 
   if (existedUser) {
     throw new ApiError(409, "User with email or username is already exist");
-  }
-
-  const avatarLocalPath = req.files?.avatar[0]?.path;
-  const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  } // FIX: This line now correctly uses optional chaining to prevent the TypeError
+  const avatarLocalPath = req.files.avatar?.[0]?.path;
+  const coverImageLocalPath = req.files.coverImage?.[0]?.path;
 
   if (!avatarLocalPath) {
     throw new ApiError(400, "Avatar file is required!");
   }
 
   const avatar = await uploadOnCloudinary(avatarLocalPath);
-  const coverImage = await uploadOnCloudinary(coverImageLocalPath);
-
+  const coverImage = await uploadOnCloudinary(coverImageLocalPath); // FIX: This is the corrected check. It now provides a more specific error
+  // if the upload to Cloudinary fails, rather than a misleading "file is required" message.
   if (!avatar) {
-    throw new ApiError(400, "Avatar file is required!");
+    throw new ApiError(500, "Failed to upload avatar to Cloudinary");
   }
 
   const user = await User.create({
-    fullname,
+    fullName,
     avatar: avatar.url,
     coverImage: coverImage?.url || "",
     email,
@@ -65,9 +64,9 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Something went wrong while registering user");
   }
 
-  return res.status(201).json(
-    new ApiResponse(200, createdUser, "User registered successfully")
-  )
+  return res
+    .status(201)
+    .json(new ApiResponse(200, createdUser, "User registered successfully"));
 });
 
 export { registerUser };
