@@ -16,7 +16,7 @@ const registerUser = asyncHandler(async (req, res) => {
   //check for user creation.
   // return res.
   //after that user can login since we have users credential.
-  console.log("Files received by Multer:", req.files);
+  // console.log("Files received by Multer:", req.files);
 
   const { fullName, email, username, password } = req.body; // console.log("email: ", email, fullname, password, username);
 
@@ -33,6 +33,8 @@ const registerUser = asyncHandler(async (req, res) => {
   if (existedUser) {
     throw new ApiError(409, "User with email or username is already exist");
   } // FIX: This line now correctly uses optional chaining to prevent the TypeError
+  console.log(req.files);
+
   const avatarLocalPath = req.files.avatar?.[0]?.path;
   const coverImageLocalPath = req.files.coverImage?.[0]?.path;
 
