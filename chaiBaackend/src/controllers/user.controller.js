@@ -1,8 +1,8 @@
-import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
-import { User } from "../models/user.model.js";
-import { uploadOnCloudinary } from "../utils/couldinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { uploadOnCloudinary } from "../utils/couldinary.js";
+import { User } from "../models/user.model.js";
 
 const registerUser = asyncHandler(async (req, res) => {
   //first time (i.e. sign up) we have form through which we get data of user frontend.
