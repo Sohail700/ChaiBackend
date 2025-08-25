@@ -51,10 +51,11 @@ const registerUser = asyncHandler(async (req, res) => {
   if (existedUser) {
     throw new ApiError(409, "User with email or username is already exist");
   } // FIX: This line now correctly uses optional chaining to prevent the TypeError
-  console.log(req.files);
+  // console.log(req.files);
 
   const avatarLocalPath = req.files.avatar?.[0]?.path;
   const coverImageLocalPath = req.files.coverImage?.[0]?.path;
+  console.log(coverImageLocalPath);
 
   if (!avatarLocalPath) {
     throw new ApiError(400, "Avatar file is required!");
@@ -62,6 +63,8 @@ const registerUser = asyncHandler(async (req, res) => {
 
   const avatar = await uploadOnCloudinary(avatarLocalPath);
   const coverImage = await uploadOnCloudinary(coverImageLocalPath); // FIX: This is the corrected check. It now provides a more specific error
+  console.log(coverImage);
+
   // if the upload to Cloudinary fails, rather than a misleading "file is required" message.
   if (!avatar) {
     throw new ApiError(500, "Failed to upload avatar to Cloudinary");
