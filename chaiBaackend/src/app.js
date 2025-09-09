@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
+// Allows web pages from a specific origin to make requests to this server
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN,

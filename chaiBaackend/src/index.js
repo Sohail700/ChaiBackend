@@ -3,10 +3,12 @@ import dotenv from "dotenv";
 import connectDB from "./db/index.js";
 import { app } from "./app.js";
 
+//.env config
 dotenv.config({
   path: "./.env",
 });
 
+//connection to mongodb
 connectDB()
   .then(() => {
     app.on("error", (error) => {
